@@ -25,16 +25,32 @@
         :class="{disabledButton: !inStock}"
         >Add to Cart</button>
       </div>   
+      <Review @review-submitted="addReviw"/>
     </div>
+      <div>
+        <h2>Reviews</h2>
+        <p v-if="!reviews.length">There are no reviews yet.</p>
+        <ol>
+          <li v-for="review,index in reviews" :key="index">
+          <p>{{ review.name }}</p>
+          <p>Rating: {{ review.rating }}</p>
+          <p>{{ review.review }}</p>
+          </li>
+        </ol>
+       </div>
   </div>
 </template>
 
 <script>
 import image1 from "../assets/vmSocks-green-onWhite.jpg"
 import image2 from "../assets/vmSocks-blue-onWhite.jpg"
+import Review from '../components/Review.vue'
 
 export default {
   name: 'Socks',
+    components: {
+    Review
+    },
   props: {
     premium: {
       type: Boolean,
@@ -62,7 +78,8 @@ export default {
           variantImage: image2,
           variantQuantity: 0
         } 
-      ]
+      ],
+      reviews: []
       }
   },
   methods: {
@@ -71,6 +88,9 @@ export default {
     },
     updateProduct(index) {
       this.selectedVariant = index
+    },
+    addReviw(productReview) {
+      this.reviews.push(productReview)
     }
   },
   computed: {
