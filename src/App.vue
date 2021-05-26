@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <Socks/>
+    <div class="nav-bar"></div>
+    <div class="cart">
+      <p>Cart({{cart.length}})</p>
+    </div>
+    <Socks :premium="premium" @add-to-cart='updateCart'/>
   </div>
 </template>
 
@@ -11,6 +15,17 @@ export default {
   name: 'App',
   components: {
     Socks
+  },
+  data() {
+    return {
+      premium: true,
+      cart: [],
+      }
+  },
+  methods: {
+    updateCart(id) {
+      this.cart.push(id)
+    }
   }
 }
 </script>
@@ -18,7 +33,7 @@ export default {
 <style>
 
 body {
-  font-family: tahoma;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   color: #282828;
   margin: 0px;
 }

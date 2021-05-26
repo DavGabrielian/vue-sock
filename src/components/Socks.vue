@@ -1,32 +1,29 @@
 <template>
   <div>
-    <div class="nav-bar"></div>
     <div class="product">
       <div class="product-image">
         <img :src="image" />
       </div>
       <div class="product-info">
-        <h1>{{ product }}</h1>
-        <p v-if="inventory > 10">In Stock</p>
+        <h1>{{ title }}</h1>
+        <p v-if="inStock">In Stock</p>
         <p v-else>Out of Stock</p>
         <p v-show="inventory <= 10 && inventory > 0">Almost</p>     
         <span v-if="onSale">On sale</span> 
+        <p>Shipping: {{shipping}}</p>
         <ul>
           <li v-for="(detail, index) in details" :key="index">{{detail}}</li>
         </ul>
-        <div v-for="variant in variants" 
+        <div v-for="(variant, index) in variants" 
           :key="variant.variantId"
           class="color-box"
           :style="{backgroundColor: variant.variantColor}"
-          @mouseover="updateProduct(variant.variantImage)"
+         @mouseover="updateProduct(index)"
         />
         <button @click="addToCart" 
         :disabled="!inStock" 
         :class="{disabledButton: !inStock}"
         >Add to Cart</button>
-        <div class="cart">
-          <p>Cart({{cart}})</p>
-        </div>
       </div>   
     </div>
   </div>
@@ -38,35 +35,59 @@ import image2 from "../assets/vmSocks-blue-onWhite.jpg"
 
 export default {
   name: 'Socks',
+  props: {
+    premium: {
+      type: Boolean,
+      required: true
+    }
+  },
   data() {
     return {
+      brand: "Vue Mastery",
       product: "Socks",
-      image: image1,
+      selectedVariant: 0,
       inventory: 100,
       onSale: true,
-      inStock: true,
       details: ["80% cotton", "20% polyester", "Gender-neutral" ],
-      cart: 0,
       variants: [
         {
           variantId: 2234,
           variantColor: 'green',
-          variantImage: image1
+          variantImage: image1,
+          variantQuantity: 10
         },
         {
           variantId: 2235,
           variantColor: 'blue',
-          variantImage: image2
+          variantImage: image2,
+          variantQuantity: 0
         } 
       ]
       }
   },
   methods: {
     addToCart() {
-      this.cart++
+      this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId)
     },
-    updateProduct(variantImage) {
-      this.image = variantImage
+    updateProduct(index) {
+      this.selectedVariant = index
+    }
+  },
+  computed: {
+    title() {
+      return `${this.brand} ${this.product}`
+    },
+    image() {
+      return this.variants[this.selectedVariant].variantImage
+    },
+    inStock() {
+      return this.variants[this.selectedVariant].variantQuantity
+    },
+    shipping() {
+      if (this.premium) {
+        return "free"
+      }
+      return 2.99
     }
   }
 }
