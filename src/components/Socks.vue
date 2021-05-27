@@ -20,37 +20,33 @@
           :style="{backgroundColor: variant.variantColor}"
          @mouseover="updateProduct(index)"
         />
-        <button @click="addToCart" 
-        :disabled="!inStock" 
-        :class="{disabledButton: !inStock}"
-        >Add to Cart</button>
+        <button 
+          @click="addToCart" 
+          :disabled="!inStock" 
+          :class="{disabledButton: !inStock}"
+        >
+          Add to Cart
+        </button>
+
       </div>   
-      <Review @review-submitted="addReviw"/>
-    </div>
+        <Tabs :reviews="reviews"/>
       <div>
-        <h2>Reviews</h2>
-        <p v-if="!reviews.length">There are no reviews yet.</p>
-        <ol>
-          <li v-for="review,index in reviews" :key="index">
-          <p>{{ review.name }}</p>
-          <p>Rating: {{ review.rating }}</p>
-          <p>{{ review.review }}</p>
-          </li>
-        </ol>
-       </div>
+      </div>          
+    </div>
   </div>
 </template>
 
 <script>
 import image1 from "../assets/vmSocks-green-onWhite.jpg"
 import image2 from "../assets/vmSocks-blue-onWhite.jpg"
-import Review from '../components/Review.vue'
+import Tabs from './Tabs.vue'
 
 export default {
   name: 'Socks',
     components: {
-    Review
+    Tabs
     },
+        
   props: {
     premium: {
       type: Boolean,
